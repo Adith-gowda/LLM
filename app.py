@@ -19,21 +19,11 @@ nltk.download('wordnet')
 model_name = "distilbert-base-uncased-finetuned-sst-2-english"
 revision = "af0f99b"
 
-#emotion pipeline
-# emotion_pipeline = pipeline("sentiment-analysis", model=model_name, revision=revision)
-model_emotion = 'arpanghoshal/EmoRoBERTa'
-
 @st.cache(allow_output_mutation=True)
 def load_pipeline(model_name, revision):
     return pipeline("sentiment-analysis", model=model_name, revision=revision)
 
-# Load the sentiment analysis pipeline
-@st.cache(allow_output_mutation=True)
-def loada_pipeline(model_emotion):
-    return pipeline("sentiment-analysis", model=model_emotion, from_tf=True)
-
 sentiment_pipeline = load_pipeline(model_name, revision)
-emotion_pipeline = loada_pipeline(model_emotion)
 
 # Preprocessing function
 def preprocess_text(text):
@@ -137,26 +127,6 @@ if st.button("Fetch and Analyze Comments"):
             st.write("Sentiment Analysis Graph")
             sentiment_counts = df['Sentiment'].value_counts()
             st.bar_chart(sentiment_counts)
-
-            st.write("Emotion Analysis")
-            results = []
-            for comment, preprocessed_comment in zip(comments, preprocessed_comments):
-                emotion = emotion_pipeline(preprocessed_comment)
-                results.append({
-                    'Author': comment['Author'],
-                    'Comment': comment['Comment'],
-                    'Preprocessed Comment': preprocessed_comment,
-                    'Emotion': emotion[0]['label']
-                })
-
-            df = pd.DataFrame(results)
-
-            st.success("Emotion analysis completed.")
-            st.write(df)
-
-            st.write("Emotion Analysis Graph")
-            emotion_counts = df['Emotion'].value_counts()
-            st.bar_chart(emotion_counts)
 
 
             # Optionally save the results to a CSV file
