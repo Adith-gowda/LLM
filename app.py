@@ -30,7 +30,7 @@ def load_pipeline(model_name, revision):
 # Load the sentiment analysis pipeline
 @st.cache(allow_output_mutation=True)
 def loada_pipeline(model_emotion):
-    return pipeline("sentiment-analysis", model=model_emotion)
+    return pipeline("sentiment-analysis", model=model_emotion, from_tf=True)
 
 sentiment_pipeline = load_pipeline(model_name, revision)
 emotion_pipeline = loada_pipeline(model_emotion)
